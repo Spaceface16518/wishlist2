@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amrit's Wishlist</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+
+    <style>
+        img {
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Manage Wishlist</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Common Wishes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Wish</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for wish in common_wishes %}
+                    <tr>
+                        <td>{{ wish.name }}</td>
+                        <td>
+                            <form action="/admin/common/delete" method="post">
+                                <input type="hidden" name="id" value="{{ wish._id }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <form action="/admin/common/add" method="post">
+                <h3>Add common wish</h3>
+                <input type="text" name="name" placeholder="Wish">
+                <button type="submit">Add</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Wishlist</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Wish</th>
+                        <th>Image</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for wish in wishlist %}
+                    <tr>
+                        <td>{{ wish.name }}</td>
+                        <td><img src="data:image;base64,{{ wish.image }}"></td>
+                        <td>
+                            <form action="/admin/wish/delete" method="post">
+                                <input type="hidden" name="id" value="{{ wish._id }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <form action="/admin/wish/add" method="post" enctype="multipart/form-data">
+                <h3>Add wish</h3>
+                <p>
+                    <input type="text" name="name" placeholder="Wish" required>
+                </p>
+                <p>
+                    <input type="file" name="image" accept="image/*">
+                </p>
+                <button type="submit">Add</button>
+            </form>
+        </section>
+    </main>
+</body>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amrit's Wishlist</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    
+    
+    <style>
+    img {
+        width: 50%;
+    }
+        </style>
+
+</head>
+
+<body>
+    <header>
+        <h1>Amrit's Wishlist</h1>
+        <p>Don't know what to get me for my birday?????????????? Read no further. Oh wait yes read further.</p>
+    </header>
+    <main>
+        <section>
+            <h2>Small stuff I alwways like</h2>
+
+            <ul>
+                {% for wish in common_wishes %}
+                <li>{{ wish.name }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section>
+            <h2>My Current Wishlist</h2>
+
+            {% for wish in wishlist %}
+            <article>
+
+                <img src="data:image;base64,{{ wish.image }}" alt="{{ wish.name }}" width="100%">
+                <h4>
+                    {{ wish.name }}
+                </h4>
+
+                <p>
+                    {{ wish.description }}
+                </p>
+
+                <form action="/wish/claim" method="post">
+                    <input type="hidden" name="id" value="{{ wish._id }}">
+                    <button type="submit" {% if wish.owner %} disabled {% endif %}>Claim</button>
+                </form>
+
+            </article>
+            {% endfor%}
+        </section>
+    </main>
+</body>
+
+</html>
