@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amrit's Wishlist</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-    
-    
+
+
     <style>
-    img {
-        width: 50%;
-    }
-        </style>
+        img {
+            width: 50%;
+        }
+    </style>
 
 </head>
 
@@ -47,10 +47,24 @@
                     {{ wish.description }}
                 </p>
 
-                <form action="/wish/claim" method="post">
+                {% if not wish.owner %}
+                <form action="{{ url_for('claim_wish') }}" method="post">
                     <input type="hidden" name="id" value="{{ wish._id }}">
-                    <button type="submit" {% if wish.owner %} disabled {% endif %}>Claim</button>
+                    <button type="submit">Claim</button>
                 </form>
+                {% elif wish.owner == user_id %}
+                <form action="{{ url_for('unclaim_wish') }}" method="post">
+                    <input type="hidden" name="id" value="{{ wish._id }}">
+                    <button type="submit">Unclaim</button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('claim_wish') }}" method="post">
+                    <input type="hidden" name="id" value="{{ wish._id }}">
+                    <button disabled type="submit">Claim</button>
+                </form>
+                {% endif %}
+
+
 
             </article>
             {% endfor%}
