@@ -35,6 +35,17 @@
         <section>
             <h2>My Current Wishlist</h2>
 
+            <form style="text-align: right;">
+                Sort by:
+                <select name="sort">
+                    {% for key in sort_keys %}
+                    <option value="{{ key }}" {% if key==sort_key %} selected {% endif %}>{{ sort_keys[key] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Sort</button>
+                </p>
+            </form>
+
             {% for wish in wishlist %}
             <article>
 

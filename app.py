@@ -35,21 +35,42 @@ def verify_password(username, password):
 
 @app.route("/")
 def index():
-    common_wishes = list(common.find({}, sort=[("created_at", -1)]))
-    wishlist = list(wishes.find())
+    # load common wishes
+    common_wishes = list(common.find())
+
+    # sort keys and directions
+    sorts = {
+        "name": "Name",
+        "created_at": "Date",
+    }
+    dirs = {
+        "name": 1,
+        "created_at": -1,
+    }
+    sort_key = request.args.get("sort", "created_at")
+    if sort_key not in sorts:
+        sort_key = "created_at"
+
+    # load dynamic wishes
+    wishlist = list(wishes.find(sort=[(sort_key, dirs.get(sort_key, 1))]))
     user_id = (
         UUID(request.cookies.get("user_id")) if "user_id" in request.cookies else None
     )
 
     return render_template(
-        "index.html", common_wishes=common_wishes, wishlist=wishlist, user_id=user_id
+        "index.html",
+        common_wishes=common_wishes,
+        wishlist=wishlist,
+        user_id=user_id,
+        sort_keys=sorts,
+        sort_key=sort_key,
     )
 
 
 @app.route("/admin")
 @auth.login_required
 def admin():
-    common_wishes = list(common.find())
+    common_wishes = list(common.find({}, sort=[("created_at", -1)]))
     wishlist = list(wishes.find())
 
     return render_template("admin.html", common_wishes=common_wishes, wishlist=wishlist)
