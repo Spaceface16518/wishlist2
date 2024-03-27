@@ -26,6 +26,13 @@
     <main>
         <section>
             <h2>Common Wishes</h2>
+
+            <form action="/admin/common/add" method="post">
+                <h3>Add common wish</h3>
+                <input type="text" name="name" placeholder="Wish">
+                <button type="submit">Add</button>
+            </form>
+
             <table>
                 <thead>
                     <tr>
@@ -48,16 +55,22 @@
                     {% endfor %}
                 </tbody>
             </table>
-
-            <form action="/admin/common/add" method="post">
-                <h3>Add common wish</h3>
-                <input type="text" name="name" placeholder="Wish">
-                <button type="submit">Add</button>
-            </form>
         </section>
 
         <section>
             <h2>Wishlist</h2>
+
+            <form action="{{ url_for('add_wish') }}" method="post" enctype="multipart/form-data">
+                <h3>Add wish</h3>
+                <p>
+                    <input type="text" name="name" placeholder="Wish" required>
+                </p>
+                <p>
+                    <input type="file" name="image" accept="image/*">
+                </p>
+                <button type="submit">Add</button>
+            </form>
+
             <table>
                 <thead>
                     <tr>
@@ -82,17 +95,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-
-            <form action="{{ url_for('add_wish') }}" method="post" enctype="multipart/form-data">
-                <h3>Add wish</h3>
-                <p>
-                    <input type="text" name="name" placeholder="Wish" required>
-                </p>
-                <p>
-                    <input type="file" name="image" accept="image/*">
-                </p>
-                <button type="submit">Add</button>
-            </form>
         </section>
     </main>
 </body>
