@@ -5,9 +5,13 @@ from uuid import UUID, uuid4
 import uuid
 from bson import ObjectId
 from flask import Flask, make_response, redirect, render_template, request, url_for
+from flask_httpauth import HTTPBasicAuth
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from pymongo import MongoClient
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
 
 # Connect to MongoDB
 
@@ -18,6 +22,15 @@ db = client["wishlist"]
 
 common = db["common"]
 wishes = db["wishes"]
+
+# auth details
+admin_user = "admin"
+admin_pass = generate_password_hash(os.environ.get("ADMIN_PASS", "admin"))
+
+
+@auth.verify_password
+def verify_password(username, password):
+    return username == admin_user and check_password_hash(admin_pass, password)
 
 
 @app.route("/")
@@ -34,6 +47,7 @@ def index():
 
 
 @app.route("/admin")
+@auth.login_required
 def admin():
     common_wishes = list(common.find())
     wishlist = list(wishes.find())
@@ -42,6 +56,7 @@ def admin():
 
 
 @app.post("/admin/common/delete")
+@auth.login_required
 def delete_common():
     id = request.form["id"]
     common.delete_one({"_id": ObjectId(id)})
@@ -50,6 +65,7 @@ def delete_common():
 
 
 @app.post("/admin/common/add")
+@auth.login_required
 def add_common():
     name = request.form["name"]
     common.insert_one({"name": name})
@@ -58,6 +74,7 @@ def add_common():
 
 
 @app.post("/admin/wish/delete")
+@auth.login_required
 def delete_wish():
     id = request.form["id"]
     wishes.delete_one({"_id": ObjectId(id)})
@@ -66,6 +83,7 @@ def delete_wish():
 
 
 @app.post("/admin/wish/add")
+@auth.login_required
 def add_wish():
     name = request.form["name"]
     if "image" in request.files:
