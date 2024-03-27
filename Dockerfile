@@ -10,4 +10,4 @@ COPY app.py /app/
 
 COPY templates /app/templates/
 
-ENTRYPOINT [ "gunicorn", "app:app", "-b", "0.0.0.0"]
+ENTRYPOINT [ "gunicorn", "app:app", "-b", "0.0.0.0:5000"]
