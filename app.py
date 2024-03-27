@@ -3,7 +3,6 @@ from datetime import datetime
 from http import HTTPStatus
 import os
 from uuid import UUID, uuid4
-import uuid
 from bson import ObjectId
 from flask import Flask, make_response, redirect, render_template, request, url_for
 from flask_httpauth import HTTPBasicAuth
