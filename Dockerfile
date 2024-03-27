@@ -2,10 +2,12 @@ FROM python:3
 
 WORKDIR /app
 
-COPY app.py requirements.txt ./
-
-COPY templates ./templates
+COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT [ "python", "-m", "flask", "run", "--host=0.0.0.0" ]
+COPY app.py /app/
+
+COPY templates /app/templates/
+
+ENTRYPOINT [ "gunicorn", "app:app", "-b", "0.0.0.0"]
