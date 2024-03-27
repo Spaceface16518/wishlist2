@@ -37,6 +37,7 @@
                 <thead>
                     <tr>
                         <th>Wish</th>
+                        <th>Created at</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -45,6 +46,7 @@
                     {% for wish in common_wishes %}
                     <tr>
                         <td>{{ wish.name }}</td>
+                        <td>{{ wish.created_at }}</td>
                         <td>
                             <form action="/admin/common/delete" method="post">
                                 <input type="hidden" name="id" value="{{ wish._id }}">
@@ -75,6 +77,7 @@
                 <thead>
                     <tr>
                         <th>Wish</th>
+                        <th>Created at</th>
                         <th>Image</th>
                         <th>Delete</th>
                     </tr>
@@ -84,6 +87,7 @@
                     {% for wish in wishlist %}
                     <tr>
                         <td>{{ wish.name }}</td>
+                        <td>{{ wish.created_at }}</td>
                         <td><img src="data:image;base64,{{ wish.image }}" alt="{{ wish.name }}"></td>
                         <td>
                             <form action="{{ url_for('delete_wish') }}" method="post">

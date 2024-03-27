@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 from http import HTTPStatus
 import os
 from uuid import UUID, uuid4
@@ -35,7 +36,7 @@ def verify_password(username, password):
 
 @app.route("/")
 def index():
-    common_wishes = list(common.find())
+    common_wishes = list(common.find({}, sort=[("created_at", -1)]))
     wishlist = list(wishes.find())
     user_id = (
         UUID(request.cookies.get("user_id")) if "user_id" in request.cookies else None
@@ -68,7 +69,7 @@ def delete_common():
 @auth.login_required
 def add_common():
     name = request.form["name"]
-    common.insert_one({"name": name})
+    common.insert_one({"name": name, "created_at": datetime.now()})
 
     return redirect(url_for("admin"))
 
@@ -91,7 +92,7 @@ def add_wish():
     else:
         image = None
 
-    wishes.insert_one({"name": name, "image": image})
+    wishes.insert_one({"name": name, "image": image, "created_at": datetime.now()})
 
     return redirect(url_for("admin"))
 
