@@ -123,7 +123,7 @@ def claim_wish():
 
 @app.post("/wish/unclaim")
 def unclaim_wish():
-    user_id = request.cookies.get("user_id")
+    user_id = UUID(request.cookies.get("user_id"))
     if user_id is None:
         # set user_id cookie to random uuid
         user_id = uuid4()
@@ -134,8 +134,8 @@ def unclaim_wish():
     if wish is None:
         return make_response("Wish not found", HTTPStatus.NOT_FOUND)
 
-    if "owner" in wish and wish["owner"] != user_id:
-        return make_response("Wish already claimed", HTTPStatus.BAD_REQUEST)
+    if wish.get("owner") != user_id:
+        return make_response("Wish not claimed by you", HTTPStatus.BAD_REQUEST)
 
     wishes.update_one({"_id": ObjectId(id)}, {"$set": {"owner": None}})
 
