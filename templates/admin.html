@@ -88,7 +88,7 @@
                     <tr>
                         <td>{{ wish.name }}</td>
                         <td>{{ wish.created_at }}</td>
-                        <td><img src="data:image;base64,{{ wish.image }}" alt="{{ wish.name }}"></td>
+                        <td><img src="/wish/image/{{ wish._id }}" alt="{{ wish.name }}" loading="lazy"></td>
                         <td>
                             <form action="{{ url_for('delete_wish') }}" method="post">
                                 <input type="hidden" name="id" value="{{ wish._id }}">

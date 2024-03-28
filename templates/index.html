@@ -49,7 +49,10 @@
             {% for wish in wishlist %}
             <article>
 
-                <img src="data:image;base64,{{ wish.image }}" alt="{{ wish.name }}" width="100%">
+                {% if wish.image %}
+                <img src="/wish/image/{{ wish._id }}" alt="{{ wish.name }}" width="100%" loading="lazy">
+                {% endif %}
+
                 <h4>
                     {{ wish.name }}
                 </h4>

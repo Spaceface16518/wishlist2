@@ -4,7 +4,14 @@ from http import HTTPStatus
 import os
 from uuid import UUID, uuid4
 from bson import ObjectId
-from flask import Flask, make_response, redirect, render_template, request, url_for
+from flask import (
+    Flask,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -107,7 +114,11 @@ def delete_wish():
 @auth.login_required
 def add_wish():
     name = request.form["name"]
-    if "image" in request.files:
+    if (
+        "image" in request.files
+        and request.files["image"] is not None
+        and request.files["image"].filename != ""
+    ):
         image = base64.b64encode(request.files["image"].read()).decode()
     else:
         image = None
@@ -161,3 +172,22 @@ def unclaim_wish():
     wishes.update_one({"_id": ObjectId(id)}, {"$set": {"owner": None}})
 
     return redirect(url_for("index"))
+
+
+@app.route("/wish/image/<id>")
+def wish_image(id):
+    wish = wishes.find_one({"_id": ObjectId(id)})
+    if wish is None:
+        return make_response("Wish not found", HTTPStatus.NOT_FOUND)
+
+    image = wish.get("image")
+    if image is None or image == "":
+        return make_response("Wish has no image", HTTPStatus.NOT_FOUND)
+
+    data = base64.b64decode(image)
+
+    response = make_response(data)
+    response.mimetype = "image/*"
+    response.headers["Content-Disposition"] = "inline"
+    response.set_etag(str(hash(data)))
+    return response
