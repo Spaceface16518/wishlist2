@@ -189,5 +189,6 @@ def wish_image(id):
     response = make_response(data)
     response.mimetype = "image/*"
     response.headers["Content-Disposition"] = "inline"
+    response.headers["Cache-Control"] = "public, max-age=15552000"
     response.set_etag(str(hash(data)))
     return response
